@@ -22,7 +22,7 @@ let besætning = [
 
 //opg 1c
 //laver en get funktion der returnere besætning
-app.get('/returner_hele_besaetning/', (req, res, next) => {
+app.get('/returner_hele_besaetning/', (req, res) => {
     res.status(200).send(besætning);
 }) 
 
@@ -33,13 +33,40 @@ dernæst laver jeg en anonym funktion som kigger "kategori igennem".
 derefter laver jeg et if statement som tjekker om den givne værdi er i "findBesætning" og hvis den ikke er vil den give en fejl.
 til sidst sender jeg "findBesætning" og jeg kan nu skrive den ønskede kategori og dermed viser den ikke hele besætningen.
 */
-app.get("/returner_antallet_af_dyr_for_en_kategori/:kategori", (req, res, next) => {
+app.get("/returner_antallet_af_dyr_for_en_kategori/:kategori", (req, res) => {
     const findBesætning = besætning.find(c => c.kategori === req.params.kategori);
-    if (!findBesætning) res.status(404).send("Forkert givet kategori");
+    if (!findBesætning) return res.status(404).send("Forkert givet kategori");
     res.send(findBesætning);
 }) 
 
-//Opg 1e
-app.put("/returner_hele_besaetning/:antal", (req, res) => {
 
+//Opg 1e
+//bruger .use express json så jeg kan ændre i mine dataer i postman
+app.use(express.json())
+
+//Jeg laver en put funktion og genbruge koden fra 1d som validere om det er den rigtige kategori
+app.put("/returner_hele_besaetning/:kategori/", (req, res) => {
+    const findBesætning = besætning.find(c => c.kategori === req.params.kategori);
+    if (!findBesætning) return res.status(404).send("Forkert givet kategori");
+
+    //Opdatere antal og sender. Hermed kan jeg i postman eksempelvis ændre data.
+    findBesætning.antal = req.body.antal
+    
+    //Til sidst sender jeg
+    res.send(findBesætning)
 })
+
+//Opg 1f
+//Jeg laver en .delete funktion og igen genbruges koden fra 1d til validerings mekanisme
+app.delete("/returner_hele_besaetning/:kategori", (req, res) => {
+    const findBesætningen = besætning.find(c => c.kategori === req.params.kategori);
+    if (!findBesætningen) return res.status(404).send("Forkert givet kategori");
+
+    //Delete gør jeg ved først at bruge indexof metoden og dernæst .splice til at fjerne det ønskede index og hermed kan jeg ændre i data
+    const index = besætning.indexOf(findBesætningen)
+    besætning.splice(index, 1);
+
+    //Til sidst sender jeg
+    res.send(findBesætningen);
+})
+
