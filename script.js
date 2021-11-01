@@ -74,7 +74,7 @@ app.delete("/returner_hele_besaetning/:kategori", (req, res) => {
     res.send(findBesætningen);
 })
 
-
+//OPG 2a sender frontend ved at access static files i "public" folder
 app.use(express.static("public"));
 
 app.get('/', (req, res) => {
