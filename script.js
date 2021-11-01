@@ -5,6 +5,9 @@
 const express = require("express")
 const app = express()
 
+
+
+
 //til sidst bruger jeg .listen og laver en funktion så den ved hvilken port den lytter på
 const PORT = 8080;
 app.listen(PORT, () => {
@@ -24,7 +27,8 @@ let besætning = [
 //laver en get funktion der returnere besætning
 app.get('/returner_hele_besaetning/', (req, res) => {
     res.status(200).send(besætning);
-}) 
+});
+
 
 //opg 1d
 /*her laver jeg en get funktion som kun sender den givne kategori tilbage.
@@ -70,3 +74,9 @@ app.delete("/returner_hele_besaetning/:kategori", (req, res) => {
     res.send(findBesætningen);
 })
 
+
+app.use(express.static("public"));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/index.html"));
+});
